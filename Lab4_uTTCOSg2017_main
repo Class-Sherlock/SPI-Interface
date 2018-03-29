@@ -1,13 +1,3 @@
-/*************************************************************************************
-* AUTO-GENERATED COMMENT - DO NOT MODIFY 
-* Author: Sachin Fernando 
-* Date: Mon 2017/12/04 at 02:52:07 PM 
-* File Type: TTCOS Main File
-*************************************************************************************/
-
-// This is an example TT_COS main( ) function with threads.
-// Use this as a template for your own TT_COS main( ) for the various Threads
-
 #include "Lab4_uTTCOSg2017_main.h"
 
 
