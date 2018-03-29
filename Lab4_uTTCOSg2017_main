@@ -1,0 +1,73 @@
+/*************************************************************************************
+* AUTO-GENERATED COMMENT - DO NOT MODIFY 
+* Author: Sachin Fernando 
+* Date: Mon 2017/12/04 at 02:52:07 PM 
+* File Type: TTCOS Main File
+*************************************************************************************/
+
+// This is an example TT_COS main( ) function with threads.
+// Use this as a template for your own TT_COS main( ) for the various Threads
+
+#include "Lab4_uTTCOSg2017_main.h"
+
+
+
+// This timing MACRO may need adjusting
+#undef  EXECUTE_EVERY_SECOND
+// #define EXECUTE_EVERY_SECOND 		uTTCOSg_GetTickFrequency( )
+#define EXECUTE_EVERY_SECOND 		(25 * uTTCOSg_GetTickFrequency( )) // ADJUST ME
+#define USE_SMITH_GPIO 	1    // Those that understand ENUM can use that C++ syntax
+#define USE_MY_GPIO 	2				// Treat these as "unsigned ints" when prototyping
+
+#define DELAY_SECOND 	(25 * uTTCOSg_GetTickFrequency( ))
+
+#include <stdio.h>
+
+enum {USE_TIMER_OS = 1, USE_AUDIO_OS = 2, DEFAULT_OS = 2, INIT_BOTH_OS_USE_AUDIO_OS = 3};
+
+unsigned int idSPI_controller;
+unsigned int idMSG0;
+unsigned int id_SendSPICommandString;
+
+bool Sending_String;
+
+bool Instruction;
+unsigned int Next_char;
+unsigned int Perv_Char;
+char Message[256];
+
+
+void main(void)
+{
+	Init_LED_GPIOInterface();
+	Init_Input_GPIOInterface();
+	Init_Output_GPIOInterface();
+
+	int numBackgroundThreads = 5;
+	int numberYourThreads = 4;      // You may need to adjust this number as more threads are activated
+	int maxNumberThreads = numBackgroundThreads + numberYourThreads;
+
+	uTTCOSg_OS_Init(USE_AUDIO_INTERRUPT, 0, 44000);
+
+	 uTTCOSg_AddThread(Init_SPI, NO_DELAY, RUN_ONCE);
+	 uTTCOSg_AddThread(Init_LCD, DELAY_SECOND, RUN_ONCE);
+
+	 idSPI_controller = uTTCOSg_AddThread(SPI_Controller, DELAY_SECOND * 2, EXECUTE_EVERY_SECOND / 50);
+
+	 idMSG0 = uTTCOSg_AddThread(message_select, DELAY_SECOND, EXECUTE_EVERY_SECOND / 10);
+
+
+	 // Now activate the uTTCOSg system by activating the audio interrupts
+	 uTTCOSg_Start_Scheduler(maxNumberThreads);
+
+	 while (1)
+	 {
+		 uTTCOSg_GoToSleep( );
+
+	     uTTCOSg_DispatchThreads( );
+
+
+	  }
+
+}
+
