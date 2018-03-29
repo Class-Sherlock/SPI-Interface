@@ -1,9 +1,3 @@
-/*
- * Launch_GoldiLocks_Lab2Part1_Thread.cpp
- *
- *  Created on: Oct 28, 2016
- *      Author: bernard.kleiner
- */
 
 #include "Lab4_2016.h"
 #include <stdio.h>
